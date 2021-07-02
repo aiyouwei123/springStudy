@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!--depends-on 通常情况下，可以直接通过之前提到的所有元素，来显式地指定bean之间的依赖关系。这样，容器在初始化当前bean定义的时候，会根据这些元素所标记的依赖关系，
+    首先实例化当前bean定义所依赖的其他bean定义。如果某些时候，我们没有通过类似<ref>的元素明确指定对象A依赖于对象B的话,那么就必须在bean定义中使用depends-on来要求容
+    器在初始化自身实例之前首先实例化其他的bean,如果说ClassA拥有多个类似的非显式依赖关系，那么，你可以在ClassA的depends-on中通过逗号
+    分割各个beanName，如下:
+     -->
+   <!-- <bean id="cat" class="com.wjl.spring.day01.Cat" depends-on="dog,person">
+        <property name="name" value="元宝"></property>
+        <property name="age" value="15"></property>
+        <property name="from" value="金渐层"></property>
+        <property name="sex" value="母"></property>
+    </bean>
+
+    <bean id="person" class="com.wjl.spring.day02.Person"></bean>
+
+    <bean id="dog" class="com.wjl.spring.day01.Dog">
+        <constructor-arg type="java.lang.String" value="小黄" index="1">
+        </constructor-arg>
+        <constructor-arg type="java.lang.String" value="公" index="0">
+        </constructor-arg>
+        <constructor-arg type="int" value="2">
+        </constructor-arg>
+    </bean>-->
+
+    <!-- autowire
+    Spring提供了5种自动绑定模式，即no、byName、byType、constructor和autodetect，下面是它们的具体介绍。
+   no: 容器默认的自动绑定模式，也就是不采用任何形式的自动绑定，完全依赖手工明确配置各个bean之间的依赖关系，以下代码演示的两种配置是等效的：
+        <bean id="beanName" class="..."/>
+         或者
+        <bean id="beanName" class="..." autowire="no"/>
+    byName: 按照类中声明的实例变量的名称，与XML配置文件中声明的bean定义的beanName的值进行匹配，相匹配的bean定义将被自动绑定到当前实例变量上。
+            需要注意两点：第一，我们并没有明确指定fooBean的依赖关系，而仅指定了它的autowire属性为byName；
+            第二，第二个bean定义的id为oneCat，与Foo类中的实例变量名称相同。
+         <bean id="fooBean" class="com.wjl.spring.day02.Foo" autowire="byName"></bean>
+        <bean id="oneCat" class="com.wjl.spring.day02.Cat">
+            <property name="name" value="招财"></property>
+        </bean>
+    byType:如果指定当前bean定义的autowire模式为byType，那么，容器会根据当前bean定义类型，分析其
+    相应的依赖对象类型，然后到容器所管理的所有bean定义中寻找与依赖对象类型相同的bean定义，然后将找到
+    的符合条件的bean自动绑定到当前bean定义。
+    -->
+    <bean id="fooBean" class="com.wjl.spring.day02.Foo" autowire="byType"></bean>
+
+    <bean id="cat" class="com.wjl.spring.day02.Cat">
+        <property name="name" value="招财"></property>
+    </bean>
+</beans>

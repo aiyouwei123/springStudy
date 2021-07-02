@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+   <bean id="cat" class="com.wjl.spring.day01.Cat">
+        <property name="name" value="元宝"></property>
+       <property name="age" value="15"></property>
+       <property name="from" value="金渐层"></property>
+       <property name="sex" value="母"></property>
+    </bean>
+    <!--使用<property>的setter方法注入和使用<constructor-arg>的构造方法注入并不是水火不容的。实际上，如果需要，可以同时使用这两个元素 -->
+    <!--
+        value 可以通过value为主体对象注入简单的数据类型，不但可以指定String类型的数据，而且可以指定其他Java语言中的原始类型以及它们的包装器（wrapper）类型，
+        ref 使用ref来引用容器中其他的对象实例，可以通过ref的local、parent和bean属性来指定引用的对象的beanName是什么,
+
+         内部<bean>。使用<ref>可以引用容器中独立定义的对象定义。但有时，可能我们所依赖的对象只有当前一个对象引用，或者某个对象定义我们不想其他对象通过<ref>引用到它。这时，我们可
+    以使用内嵌的<bean>，将这个私有的对象定义仅局限在当前对象。
+      <property name="cat">
+            <bean class="com.wjl.spring.day02.Cat">
+                <property name="name" value="元宝"></property>
+            </bean>
+        </property>
+     -->
+    <!--- <ref>及其local、parent和bean属性的使用 -->
+    <bean id="person" class="com.wjl.spring.day02.Person">
+        <property name="name" value="大宝"></property>
+        <property name="age" value="18"></property>
+        <property name="sex" >
+            <!--idef标签为当前对象注入所依赖对象的名称,而不是引用 -->
+            <idref bean="cat"></idref>
+        </property>
+        <property name="cat">
+            <bean class="com.wjl.spring.day02.Cat">
+                <property name="name" value="元宝"></property>
+            </bean>
+        </property>
+        <property name="pet">
+            <!--list>对应注入对象类型为java.util.List及其子类或者数组类型的依赖对象。 <list>元素内部可以嵌套其他元素-->
+            <list>
+                <value>cat</value>
+                <value>dog</value>
+            </list>
+        </property>
+        <property name="fimally">
+            <!--对于<map>来说，它可以内嵌任意多个<entry>，每一个<entry>都需要为其指定一个键和一个值，就跟真正的java.util.Map所要求的一样
+                可以使用<entry>的属性——key或者key-ref来指定键，key属性用于指定通常的简单类型的键，而key-ref则用于指定对象的引用作为键。
+                也可以直接使用<entry>的value或者value-ref这两个属性来指定entry对应的值,也可以使用提到的所有元素,除了key
+            -->
+            <map>
+                <entry key="father">
+                    <value>吴彦祖</value>
+                </entry>
+                <entry key="mather">
+                    <value>Jonsion</value>
+                </entry>
+                <entry key="son">
+                    <list>
+                        <value>王腾</value>
+                        <value>狠人</value>
+                    </list>
+                </entry>
+            </map>
+        </property>
+        <property name="friend">
+            <!--如果说<list>可以帮你有序地注入一系列依赖的话，那么<set>就是无序的，而且，对于set来说，元素的顺序本来就是无关紧要的。<set>对应注入Java Collection中类型为java.util.
+            Set或者其子类的依赖对象。 -->
+            <set>
+                <value>1111</value>
+                <value>1111</value>
+                <value>荒天帝</value>
+                <value>叶天帝</value>
+            </set>
+        </property>
+
+    </bean>
+    <!-- <props>是简化后了的<map>，或者说是特殊化的map，该元素对应配置类型为java.util.Properties的对象依赖。因为Properties只能指定String类型的键（key）和值，所以，
+         <props>的配置简化很多，只有固定的格式
+     -->
+    <bean id="demoProperties" class="com.wjl.spring.day02.DemoProperties">
+        <property name="emailAddrs">
+            <props>
+                <prop key="email1">6666@163.com</prop>
+                <prop key="email2">123456@qq.com</prop>
+            </props>
+        </property>
+    </bean>
+
+    <!-- <null> 对于String类型来说，如果通过value以这样的方式指定注入，即<value></value>，那么，得到的结果是""，而不是null。所以，如果需要为这个string对应的值注入null的话，请使用<null/>。-->
+</beans>
