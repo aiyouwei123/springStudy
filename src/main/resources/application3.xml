@@ -1,30 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd"
+>
 
     <!--depends-on 通常情况下，可以直接通过之前提到的所有元素，来显式地指定bean之间的依赖关系。这样，容器在初始化当前bean定义的时候，会根据这些元素所标记的依赖关系，
     首先实例化当前bean定义所依赖的其他bean定义。如果某些时候，我们没有通过类似<ref>的元素明确指定对象A依赖于对象B的话,那么就必须在bean定义中使用depends-on来要求容
     器在初始化自身实例之前首先实例化其他的bean,如果说ClassA拥有多个类似的非显式依赖关系，那么，你可以在ClassA的depends-on中通过逗号
     分割各个beanName，如下:
      -->
-   <!-- <bean id="cat" class="com.wjl.spring.day01.Cat" depends-on="dog,person">
-        <property name="name" value="元宝"></property>
-        <property name="age" value="15"></property>
-        <property name="from" value="金渐层"></property>
-        <property name="sex" value="母"></property>
-    </bean>
+    <!-- <bean id="cat" class="com.wjl.spring.day01.Cat" depends-on="dog,person">
+         <property name="name" value="元宝"></property>
+         <property name="age" value="15"></property>
+         <property name="from" value="金渐层"></property>
+         <property name="sex" value="母"></property>
+     </bean>
 
-    <bean id="person" class="com.wjl.spring.day02.Person"></bean>
+     <bean id="person" class="com.wjl.spring.day02.Person"></bean>
 
-    <bean id="dog" class="com.wjl.spring.day01.Dog">
-        <constructor-arg type="java.lang.String" value="小黄" index="1">
-        </constructor-arg>
-        <constructor-arg type="java.lang.String" value="公" index="0">
-        </constructor-arg>
-        <constructor-arg type="int" value="2">
-        </constructor-arg>
-    </bean>-->
+     <bean id="dog" class="com.wjl.spring.day01.Dog">
+         <constructor-arg type="java.lang.String" value="小黄" index="1">
+         </constructor-arg>
+         <constructor-arg type="java.lang.String" value="公" index="0">
+         </constructor-arg>
+         <constructor-arg type="int" value="2">
+         </constructor-arg>
+     </bean>-->
 
     <!-- autowire
     Spring提供了5种自动绑定模式，即no、byName、byType、constructor和autodetect，下面是它们的具体介绍。
@@ -51,10 +52,48 @@
      数的类型而进行的自动绑定，它同样是byType类型的绑定模式。不过，constructor是匹配构造方法的参数类型，
      而不是实例属性的类型。与byType模式类似，如果找到不止一个符合条件的bean定义，那么，容器会返回错误。
      使用上也与byType没有太大差别，只不过是应用到需要使用构造方法注入的bean定义之上
-    -->
-    <bean id="fooBean" class="com.wjl.spring.day02.Foo" autowire="byType"></bean>
 
-    <bean id="cat" class="com.wjl.spring.day02.Cat">
+     后续没有了
+    autodetect:
+    这种模式是byType和constructor模式的结合体，如果对象拥有默认无参数的构造方法，容器会
+    优先考虑byType的自动绑定模式。否则，会使用constructor模式。当然，如果通过构造方法注入绑
+    定后还有其他属性没有绑定，容器也会使用byType对剩余的对象属性进行自动绑定
+
+
+    自动绑定和手动明确绑定各有利弊。自动绑定的优点有如下两点。
+        (1) 某种程度上可以有效减少手动敲入配置信息的工作量。
+        (2) 某些情况下，即使为当前对象增加了新的依赖关系，但只要容器中存在相应的依赖对
+        象，就不需要更改任何配置信息。
+        自动绑定的缺点有如下几点。
+        (1) 自动绑定不如明确依赖关系一目了然。我们可以根据明确的依赖关系对整个系统有一
+        个明确的认识，但使用自动绑定的话，就可能需要在类定义以及配置文件之间，甚至各个配置
+        文件之间来回转换以取得相应的信息。
+        (2) 某些情况下，自动绑定无法满足系统需要，甚至导致系统行为异常或者不可预知。根
+        据类型（byType）匹配进行的自动绑定，如果系统中增加了另一个相同类型的bean定义，那么
+        整个系统就会崩溃；根据名字（byName）匹配进行的自动绑定，如果把原来系统中相同名称的
+        bean定义类型给换掉，就会造成问题，而这些可能都是在不经意间发生的。
+        (3) 使用自动绑定，我们可能无法获得某些工具的良好支持，比如Spring IDE。
+    -->
+
+    <!--dependency-check spring3.0中被弃用
+        none。不做依赖检查。将dependency-check指定为none跟不指定这个属性等效，所以，还是不要多敲那几个字符了吧。默认情况下，容器以此为默认值。
+        simple。如果将dependency-check的值指定为simple，那么容器会对简单属性类型以及相关的collection进行依赖检查，对象引用类型的依赖除外。
+        object。只对对象引用类型依赖进行检查。
+     -->
+
+    <!--lazy-init 延迟初始化（lazy-init）这个特性的作用，主要是可以针对ApplicationContext容器的bean
+        初始化行为施以更多控制。与BeanFactory不同，ApplicationContext在容器启动的时候，就会马
+        上对所有的“singleton的bean定义”①进行实例化操作。通常这种默认行为是好的，因为如果系统有问
+        题的话，可以在第一时间发现这些问题，但有时，我们不想某些bean定义在容器启动后就直接实例化，
+        可能出于容器启动时间的考虑，也可能出于其他原因的考虑。总之，我们想改变某个或者某些bean定
+        义在ApplicationContext容器中的默认实例化时机。这时，就可以通过<bean>的lazy-init属性来
+        控制这种初始化行为
+     -->
+    <bean id="fooBean"   class="com.wjl.spring.day02.Foo">
+        <property name="oneCat" ref="cat"></property>
+    </bean>
+
+    <bean id="cat" class="com.wjl.spring.day02.Cat" >
         <property name="name" value="招财"></property>
     </bean>
 </beans>
