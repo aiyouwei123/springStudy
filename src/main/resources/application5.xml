@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <!-- class指定静态方法工厂类，factory-method指定工厂方法名称，然后，容器调用该静态方法工
+        厂类的指定工厂方法（getInstance），并返回方法调用后的结果，即Aoo的实例。
+        也就是说，为foo注入的aoo实际上是Aoo的实例，即方法调用后的结果，而不是静态
+        工厂方法类（StaticInterfaceFactory）。-->
+ <!--   <bean id="staticInterfaceFactory" class="com.wjl.spring.day03.StaticInterfaceFactory" factory-method="getInstance"></bean>-->
+    <bean id="boo" class="com.wjl.spring.day03.Boo">
+        <!--<property name="aoo">
+            <ref bean="aoo"></ref>
+        </property>-->
+        <!--通过<lookup-method>的name属性指定需要注入的方法名，bean属性指定需要注入的对象，当getNewsBean方法被调用的时候，
+        容器可以每次返回一个新的FXNewsBean类型的实例。 -->
+       <!-- <lookup-method bean="aoo" name="getAoo"></lookup-method>-->
+
+        <!-- replaced-method 替换方法 -->
+        <replaced-method name="getAoo" replacer="logMethodReplacer">
+        </replaced-method>
+
+    </bean>
+    <bean id="aoo" class="com.wjl.spring.day03.Aoo" scope="prototype"></bean>
+
+    <bean id="logMethodReplacer" class="com.wjl.spring.day03.LogMethodReplacer">
+    </bean>
+    <!--有些时候，有的工厂类的工厂方法可能需要参数来返回相应实例，而不一定非要像我们的getInstance()这样没有任何参数。
+    对于这种情况，可以通过<constructor-arg>来指定工厂方法需要的参数  通过<constructor-arg>为工厂方法传入相应参数。
+    一需要注意的就是，针对静态工厂方法实现类的bean定义，使用<constructor-arg>传入的是
+    工厂方法的参数，而不是静态工厂方法实现类的构造方法的参数。
+    -->
+  <!--  <bean id="staticInterfaceFactory" class="com.wjl.spring.day03.StaticInterfaceFactory" factory-method="getInstance">
+        <constructor-arg>
+            <ref bean="cat"></ref>
+        </constructor-arg>
+    </bean>
+    <bean id="boo" class="com.wjl.spring.day03.Boo">
+        <property name="aoo">
+            <ref bean="staticInterfaceFactory"></ref>
+        </property>
+    </bean>
+    <bean id="cat" class="com.wjl.spring.day02.Cat"></bean>
+-->
+
+    <bean id="nextDayDateDisplayer" class="com.wjl.spring.day03.NextDayDateDisplayer">
+        <property name="dateOfNextDay">
+            <ref bean="nextDayDate"/>
+        </property>
+    </bean>
+
+    <bean id="nextDayDate" class="com.wjl.spring.day03.NextDayDateFactoryBean">
+    </bean>
+
+    <!-- -->
+</beans>
